@@ -1,26 +1,13 @@
 #include <iostream>
+#include "MindstormSolver.h"
 using namespace std;
 
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
-
-bool firstArg[9], secondArg[9][9], thirdArg[9][9][9];
-//firstArg and secondArg are here because I pictured this algorithm as a tree. They can be avoided. The search is a bit less efficient then but the code gets less complex.
-int guess[3];
-int a, b, tries;
-
-void init();
-void guessNumber();
-void eliminatePaths();
-void analysis();
-bool isElementOf(int , int[]);
-int matchingPositions(int, int, int);
-int shiftedPositions(int, int, int, int);
 
 int main(int argc, char** argv) {
 	cout << "Please think of a number with three letters. It may not contain the same letter twice.\n";
 	cout << "Example: 123 is ok, but 122 is not because it contains the letter 2 twice.\n\n";
 	init();
-	
+
 	while(true) {
 		tries++;
 		guessNumber();
@@ -36,28 +23,10 @@ int main(int argc, char** argv) {
 		analysis();
 	}
 	cout << endl << endl << tries << " Guesses used." << endl << endl;
-	system("pause");
 }
 
 void analysis() {
 	int correctLetters = a + b;
-	/**if (correctLetters == 0) {
-		//eliminate all combinations with these letters
-		for (int i = 0; i < 3; i++) {
-			firstArg[guess[i]-1] = false;
-			for (int j = 0; j < 9; j++) {
-				secondArg[guess[i]-1][j] = false;
-				secondArg[j][guess[i]-1] = false;
-				for (int k = 0; k < 9; k++) {
-					thirdArg[guess[i]-1][j][k] = false;
-					thirdArg[j][guess[i]-1][k] = false;
-					thirdArg[j][k][guess[i]-1] = false;
-				}
-			}
-		}
-		return false;
-	}*/
-	//it is starting to suck to code this.
 	//eliminate all combinations that do not contain the correct number of correct letters ;-P
 	for (int i = 0; i < 9; i++) {
 		for (int j = 0; j < 9; j++) {
@@ -73,7 +42,6 @@ void analysis() {
 			}
 		}
 	}
-	
 	eliminatePaths();
 }
 
@@ -115,7 +83,7 @@ void guessNumber() {
 	// choose first true values.
 	int i, j, k;
 	for (i = 0; i < 9; i++) {
-		if (firstArg[i]) {
+		//if (firstArg[i]) {
 			for (j = 0; j < 9; j++) {
 				if (secondArg[i][j]) {
 					for (k = 0; k < 9; k++) {
@@ -126,9 +94,9 @@ void guessNumber() {
 						break;
 				}
 			}
-			if (secondArg[i][j] && thirdArg[i][j][k]) 
+			if (/*secondArg[i][j] &&*/ thirdArg[i][j][k])
 				break;
-		}
+		//}
 	}
 	guess[0] = i+1; guess[1] = j+1; guess[2] = k+1;
 }

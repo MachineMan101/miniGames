@@ -2,22 +2,14 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+#include "Mindstorm.h"
 using namespace std;
-/* run this program using the console pauser or add your own getch, system("pause") or input loop */
 
-double lsg [3], guessArray[3];
-int tries = 0;
-
-void print3(double *);
-void print3(int *);
-void generateNo();
-void askGuess();
-bool check();
 
 int main(int argc, char** argv) {
 	cout << "Welcome to Mindstorm!" << endl;
 	cout << "---------------------" << endl;
-	cout << "A random number between 0 and 999 has been generated. The number does not contain the same letter more than once." 
+	cout << "A random number between 0 and 999 has been generated. The number does not contain the same letter more than once."
 	<< "You need to guess the number correctly.\n"
 	<< "For every letter guessed correctly, a is increased by the value 1 if the letter has the correct position. If the letter "
 	<< "does not have the correct position, b is increased by 1. I.e. if a = b = 0, no letter was correct.\n";
@@ -32,7 +24,6 @@ int main(int argc, char** argv) {
 	}
 	cout << endl << "You have won the game!!";
 	cout << endl << tries << " attempts used.\n\n";
-	system("pause");
 	return 0;
 }
 

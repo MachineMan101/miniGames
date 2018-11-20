@@ -38,3 +38,8 @@
 # Uncommited files
 main.*
 WindowsTest.*
+
+# Executables
+Mindstorm
+MindstormSolver
+Sudoku
