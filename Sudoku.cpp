@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
 	feed();
 	inserted -= 81;
 	//printPattern(2);
-	//so weit so gut. nun muss gecheckt werden, in welcher, zeile/spalte/quadrat nur 1 mögl. besteht für die zahl.
+	//so weit so gut. nun muss gecheckt werden, in welcher, zeile/spalte/quadrat nur 1 mÃ¶gl. besteht fÃ¼r die zahl.
 	int oldsolved = -1;
 	while (oldsolved < inserted) {
 		oldsolved = inserted;
@@ -42,6 +42,7 @@ int main(int argc, char** argv) {
 	printSudoku();
 	cout << endl << inserted << " numbers inserted.";
 	//printPattern(8);
+	cout << endl;
 	system("pause");
 	return 0;
 }
@@ -60,7 +61,7 @@ void feed() {
 
 void found(int no, int zeile, int spalte) {
 	inserted++;
-	if (no==0) //leeres Kästchen. also eine Möglichkeit (1) für alle Zahlen, mach nichts
+	if (no==0) //leeres KÃ¤stchen. also eine MÃ¶glichkeit (1) fÃ¼r alle Zahlen, mach nichts
 		return;
 	sudoku[zeile][spalte] = no;
 	eraseZeile(no-1, zeile);
@@ -89,7 +90,7 @@ void eraseSquare(int index, int zeile, int spalte) {
 			pattern[index][i][j] = false;
 }
 void erasePos(int zeile, int spalte) {
-	//der Platz ist für die anderen Zahlen nicht mehr verfügbar.
+	//der Platz ist fÃ¼r die anderen Zahlen nicht mehr verfÃ¼gbar.
 	for (int index = 0; index < 9; index++)
 		pattern[index][zeile][spalte] = false;
 }
