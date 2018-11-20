@@ -31,6 +31,10 @@
 *.out
 *.apip
 
+# DevC++ Files
+*.dev
+*.layout
+
 # Uncommited files
 main.*
 WindowsTest.*
