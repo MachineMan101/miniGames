@@ -10,6 +10,7 @@ int main(int argc, char** argv) {
 
 	while(true) {
 		tries++;
+		// cout << countCombos() << " Combinations left.\n";
 		guessNumber();
 		cout << "Is the number " << guess[0] << guess[1] << guess[2] << "?\n";
 		cout << "Enter Number of correct letters at the correct place: ";
@@ -25,6 +26,33 @@ int main(int argc, char** argv) {
 	cout << endl << endl << tries << " Guesses used." << endl << endl;
 }
 
+void dispCombos() {
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			for (int k = 0; k < 9; k++) {
+				if(combinations[i][j][k])
+				cout << i+1 << j+1 << k+1 << endl;
+			}
+		}
+	}
+}
+
+int countCombos() {
+	int count = 0;
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			for (int k = 0; k < 9; k++) {
+				if (combinations[i][j][k])
+				count++;
+			}
+		}
+	}
+	if (count <= 5) {
+		dispCombos();
+	}
+	return count;
+}
+
 void analysis() {
 	int correctLetters = a + b;
 	//eliminate all combinations that do not contain the correct number of correct letters ;-P
@@ -32,17 +60,15 @@ void analysis() {
 		for (int j = 0; j < 9; j++) {
 			for (int k = 0; k < 9; k++) {
 				if (isElementOf(i+1, guess) + isElementOf(j+1, guess) + isElementOf(k+1, guess) != correctLetters) {
-					thirdArg[i][j][k] = false;
-					// just delete this combination. Maybe include a loop that deletes secondArgs (if all thirdArgs == false) as well later.
+					combinations[i][j][k] = false;
 				} else {
 					//we have the correct number of letters. now we have to make sure, the positions are possible as well.
 					if (!(matchingPositions(i,j,k) == a && shiftedPositions(i,j,k,correctLetters) == b))
-						thirdArg[i][j][k] = false;
+						combinations[i][j][k] = false;
 				}
 			}
 		}
 	}
-	eliminatePaths();
 }
 
 int matchingPositions(int one, int two, int three){
@@ -51,23 +77,6 @@ int matchingPositions(int one, int two, int three){
 
 int shiftedPositions(int one, int two, int three, int correctLetters) {
 	return correctLetters - matchingPositions(one, two, three);
-}
-
-void eliminatePaths() {
-	for (int i = 0; i < 9; i++) {
-		bool secondTier = false;
-		for (int j = 0; j < 9; j++) {
-			bool thirdTier = false;
-			for (int k = 0; k < 9; k++) {
-				if (thirdArg[i][j][k])
-					thirdTier = true;
-			}
-			secondArg[i][j] = thirdTier;
-			if (secondArg[i][j])
-				secondTier = true;
-		}
-		firstArg[i] = secondTier;
-	}
 }
 
 bool isElementOf(int candidate, int liste[]) {
@@ -81,36 +90,34 @@ bool isElementOf(int candidate, int liste[]) {
 
 void guessNumber() {
 	// choose first true values.
-	int i, j, k;
-	for (i = 0; i < 9; i++) {
-		//if (firstArg[i]) {
-			for (j = 0; j < 9; j++) {
-				if (secondArg[i][j]) {
-					for (k = 0; k < 9; k++) {
-						if (thirdArg[i][j][k])
-							break;
-					}
-					if (thirdArg[i][j][k])
-						break;
+	int a = 0, b = 0, c = 0;
+	for (int i = 0; i < 9; i++) {
+		for (int j = 0; j < 9; j++) {
+			for (int k = 0; k < 9; k++) {
+				if (combinations[i][j][k]) {
+					a = i; b = j; c = k;
+					break;
 				}
 			}
-			if (/*secondArg[i][j] &&*/ thirdArg[i][j][k])
-				break;
-		//}
+			if (combinations[a][b][c])
+			break;
+		}
+		if (combinations[a][b][c])
+		break;
 	}
-	guess[0] = i+1; guess[1] = j+1; guess[2] = k+1;
+	guess[0] = a+1;
+	guess[1] = b+1;
+	guess[2] = c+1;
 }
 
 void init() {
 	tries = 0;
 	for (int i = 0; i < 9; i++){
-		firstArg[i] = true;
 		for (int j = 0; j < 9; j++) {
 			if (i != j) {
-				secondArg[i][j] = true;
 				for (int k = 0; k < 9; k++) {
 					if (j != k && i != k) {
-						thirdArg[i][j][k] = true;
+						combinations[i][j][k] = true;
 					}
 				}
 			}
