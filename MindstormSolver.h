@@ -1,17 +1,27 @@
 #ifndef MINDSTORMSOLVER_H
 #define MINDSTORMSOLVER_H
 
-bool combinations[9][9][9];
-//firstArg and secondArg are here because I pictured this algorithm as a tree. They can be avoided. The search is a bit less efficient then but the code gets less complex.
-int guess[3];
-int a, b, tries;
+class MindstormSolver {
 
-void init();
-void guessNumber();
-void analysis();
-bool isElementOf(int , int[]);
-int matchingPositions(int, int, int);
-int shiftedPositions(int, int, int, int);
-int countCombos();
+private:
+  bool combinations[9][9][9];
+
+  void init();
+  bool isElementOf(int , int[]);
+  int matchingPositions(int, int, int);
+  int shiftedPositions(int, int, int, int);
+  void guessNumber();
+
+
+public:
+  int guess[3];
+  int a, b, tries;
+
+  MindstormSolver() { init(); }
+  int countCombos();
+  void dispCombos();
+  bool makeGuess();
+  void analysis();
+};
 
 #endif /* MY_CLASS_H */

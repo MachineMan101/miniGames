@@ -1,14 +1,17 @@
-all: MindstormSolver Mindstorm Sudoku
+all: MindstormMaster Sudoku
 
-MindstormSolver: MindstormSolver.cpp
-	g++ MindstormSolver.cpp -o MindstormSolver
+MindstormMaster: MindstormMaster.cpp MindstormSolver.cpp Mindstorm.cpp
+	g++ MindstormMaster.cpp -o MindstormMaster
 
-Mindstorm: Mindstorm.cpp
-	g++ Mindstorm.cpp -o Mindstorm
+# MindstormSolver: MindstormSolver.cpp
+# 	g++ MindstormSolver.cpp -o MindstormSolver
+#
+# Mindstorm: Mindstorm.cpp
+# 	g++ Mindstorm.cpp -o Mindstorm
 
 Sudoku: Sudoku.cpp
 	g++ Sudoku.cpp -o Sudoku
 
 clean:
 	rm -rf *.o
-	rm Mindstorm MindstormSolver Sudoku
+	rm MindstormMaster Mindstorm MindstormSolver Sudoku
