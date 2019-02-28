@@ -4,38 +4,48 @@ using namespace std;
 
 
 int main(int argc, char** argv) {
-	init();
-	feed();
-	inserted -= 81;
+	int sudoku[9][9] = {
+		{0,1,2, 6,7,9, 0,0,0},
+		{8,0,0, 0,2,0, 0,5,0},
+		{4,0,0, 8,0,0, 7,0,0},
+		{9,0,7, 0,0,0, 0,0,3},
+		{6,2,0, 0,0,0, 0,9,7},
+		{1,0,0, 0,0,0, 2,0,5},
+		{0,0,9, 0,0,1, 0,0,6},
+		{0,5,0, 0,4,0, 0,0,8},
+		{0,0,0, 9,8,3, 5,2,0}
+	};
+	Sudoku s(sudoku);
 	//printPattern(2);
 	//so weit so gut. nun muss gecheckt werden, in welcher, zeile/spalte/quadrat nur 1 mögl. besteht für die zahl.
-	int oldsolved = -1;
-	while (oldsolved < inserted) {
-		oldsolved = inserted;
-		solve();
-	}
-	printSudoku();
-	cout << endl << inserted << " numbers inserted.";
+	do {
+		s.solve();
+	} while(s.updated);
+	s.printSudoku();
+	cout << endl << s.inserted << " numbers inserted." << endl;
 	//printPattern(8);
 	//cout << endl;
 	//system("pause");
 	return 0;
 }
 
-void init() {
+void Sudoku::init() {
+	// initialize pattern to all true
 	for(int i=0; i<9; i++)
 		for (int j=0; j<10; j++)
 			for (int k=0; k<10; k++)
 				pattern[i][j][k] = true;
 }
-void feed() {
+void Sudoku::feed() {
+	// adapt pattern to the current sudoku.
 	for (int i=0; i<9; i++)
 		for (int j=0; j<9; j++)
 			found(sudoku[i][j], i, j);
 }
 
-void found(int no, int zeile, int spalte) {
+void Sudoku::found(int no, int zeile, int spalte) {
 	inserted++;
+	updated = true;
 	if (no==0) //leeres Kästchen. also eine Möglichkeit (1) für alle Zahlen, mach nichts
 		return;
 	sudoku[zeile][spalte] = no;
@@ -45,33 +55,28 @@ void found(int no, int zeile, int spalte) {
 	erasePos(zeile, spalte);
 }
 
-void eraseZeile(int index, int zeile) {
+void Sudoku::eraseZeile(int index, int zeile) {
 	for (int spalte = 0; spalte <=9; spalte++)
 		pattern[index][zeile][spalte] = false;
 }
-void eraseSpalte(int index, int spalte) {
+void Sudoku::eraseSpalte(int index, int spalte) {
 	for (int zeile = 0; zeile <=9; zeile++)
 		pattern[index][zeile][spalte] = false;
 }
-void eraseSquare(int index, int zeile, int spalte) {
-	// int zstart = zeile/3;
-	// if (zstart%3 == 0)
-	// zstart -= 1;
-	// int sstart = sstart/3;
-	// if (sstart%3 == 0)
-	// sstart -=1;
+void Sudoku::eraseSquare(int index, int zeile, int spalte) {
 	for (int i = zeile/3*3; i < zeile/3*3+3; i++)
 		for (int j = spalte/3*3; j < spalte/3*3+3; j++)
 			pattern[index][i][j] = false;
 }
-void erasePos(int zeile, int spalte) {
+void Sudoku::erasePos(int zeile, int spalte) {
 	//der Platz ist für die anderen Zahlen nicht mehr verfügbar.
 	for (int index = 0; index < 9; index++)
 		pattern[index][zeile][spalte] = false;
 }
 
-void solve() //some repetition needed
+void Sudoku::solve() //some repetition needed
 {
+	updated = false;
 	for (int index = 0; index < 9; index++) {
 		for (int i = 0; i < 9; i++) {
 			if (pattern[index][i][9]) {
@@ -86,18 +91,15 @@ void solve() //some repetition needed
 				if (n == 1)
 					found(index+1, z, i);
 			}
-			//for (int i = 0; i < 9; i++) //check if there is more than one option in this square
-			//{
+			//check if there is more than one option in this square
 			int n = 0, s, z;
-			//cout << i%3*3 << "," << i/3*3  << endl;
 			checkSquare(index, i, n, s, z);
 			if (n == 1)
 				found(index+1, z, s);
-			//}
 		}
 	}
 }
-void checkSquare(int index, int i, int &n, int &s, int &z) //currently non-sensed or isn't it?
+void Sudoku::checkSquare(int index, int i, int &n, int &s, int &z) //currently non-sensed or isn't it?
 {
 	//cout << "\nSpalte" << i%3*3 << " Zeile" << i/3*3;
 	int zeilenAnfang = i/3*3, spaltenAnfang = i%3*3;
@@ -108,14 +110,14 @@ void checkSquare(int index, int i, int &n, int &s, int &z) //currently non-sense
 				s = spalte; z = zeile;
 			}
 }
-void checkZeile(int index, int zeile, int &n, int &s) {
+void Sudoku::checkZeile(int index, int zeile, int &n, int &s) {
 	for (int spalte = 0; spalte < 9; spalte++)
 		if (pattern[index][zeile][spalte]) {
 			n++;
 			s = spalte;
 		}
 }
-void checkSpalte(int index, int spalte, int &n, int &z) {
+void Sudoku::checkSpalte(int index, int spalte, int &n, int &z) {
 	for (int zeile = 0; zeile < 9; zeile++)
 		if (pattern[index][zeile][spalte]) {
 		n++;
@@ -123,7 +125,7 @@ void checkSpalte(int index, int spalte, int &n, int &z) {
 	}
 }
 
-void printPattern(int n) {
+void Sudoku::printPattern(int n) {
 	cout << endl << "_____________________________________";
 	for(int i = 0; i < 10; i++) {
 		cout << endl << "| ";
@@ -132,7 +134,7 @@ void printPattern(int n) {
 		cout << endl << "_____________________________________";
 	}
 }
-void printSudoku() {
+void Sudoku::printSudoku() {
 	cout << endl << "_____________________________________";
 	for(int i = 0; i < 9; i++) {
 		cout << endl << "| ";
